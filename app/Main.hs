@@ -20,14 +20,14 @@ printEquations matrix =
       in intercalate " + " nonZeroTerms ++ " = " ++ show rhs
     formatTerm coeff i
       | coeff == 0 = ""
-      | coeff == 1 = "x_" ++ show i
-      | coeff == -1 = "-x_" ++ show i
-      | otherwise = show coeff ++ "*x_" ++ show i
+      | coeff == 1 = "x" ++ show i
+      | coeff == -1 = "-x" ++ show i
+      | otherwise = show coeff ++ "*x" ++ show i
 
 -- розв'язок
 printSolution :: [Double] -> IO ()
 printSolution solutions =
-    mapM_ (uncurry (printf "x_%d = %.2f\n")) (zip [1 :: Int ..] solutions)
+    mapM_ (uncurry (printf "x%d = %.2f\n")) (zip [1 :: Int ..] solutions)
 
 -- час виконання
 timeIt :: NFData b => (a -> b) -> a -> IO Double
@@ -53,7 +53,7 @@ main = do
     printSolution solution
 
     putStrLn "\nperformance check"
-    let bigSystem = createSystem 500
+    let bigSystem = createSystem 150
 
     seqTime <- timeIt solveSequential bigSystem
     printf "sequential time: %.4f sec\n" seqTime
