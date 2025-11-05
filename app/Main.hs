@@ -1,10 +1,7 @@
 module Main (main) where
 
 import GaussianSolver
-import Data.Time.Clock (getCurrentTime, diffUTCTime)
 import Text.Printf (printf)
-import Control.DeepSeq (NFData, rnf)
-import Control.Exception (evaluate)
 import Data.List (intercalate)
 
 -- вивід рівнянь
@@ -27,15 +24,7 @@ printEquations matrix =
 -- розв'язок
 printSolution :: [Double] -> IO ()
 printSolution solutions =
-    mapM_ (uncurry (printf "x%d = %.2f\n")) (zip [1 :: Int ..] solutions)
-
--- час виконання
-timeIt :: NFData b => (a -> b) -> a -> IO Double
-timeIt f x = do
-    start <- getCurrentTime
-    _ <- evaluate (rnf (f x))
-    end <- getCurrentTime
-    return $ realToFrac (diffUTCTime end start)
+    mapM_ (uncurry (printf "x_%d = %.2f\n")) (zip [1 :: Int ..] solutions)
 
 main :: IO ()
 main = do
@@ -51,16 +40,3 @@ main = do
     putStrLn "\nresult:"
     let solution = solveSequential matrix
     printSolution solution
-
-    putStrLn "\nperformance check"
-    let bigSystem = createSystem 150
-
-    seqTime <- timeIt solveSequential bigSystem
-    printf "sequential time: %.4f sec\n" seqTime
-
-    parTime <- timeIt solveParallel bigSystem
-    printf "parallel time:   %.4f sec\n" parTime
-
-createSystem :: Int -> [[Double]]
-createSystem n =
-  [ [ fromIntegral (i * n + j + 1) | j <- [0..n-1] ] ++ [fromIntegral (i+1)] | i <- [0..n-1] ]

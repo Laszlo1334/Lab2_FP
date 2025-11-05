@@ -21,9 +21,7 @@ executable lab2-fp-exe
     main-is:            Main.hs
     build-depends:
         , Lab2-FP
-        , time
         , text
-        , deepseq
     hs-source-dirs:     app
     ghc-options:
         -threaded
@@ -39,6 +37,9 @@ test-suite lab2-fp-test
     build-depends:
         , Lab2-FP
         , hspec
+        , time     
+        , deepseq  
+        , text      
     ghc-options:
         -threaded
         -rtsopts
